@@ -1,4 +1,4 @@
-FROM node:18-slim
+FROM node:22-slim
 
 # Install build dependencies
 RUN apt-get update && \
@@ -19,6 +19,9 @@ RUN pnpm install --frozen-lockfile
 
 # Copy the rest of the application
 COPY . .
+
+# Create tsup config
+RUN echo 'import { defineConfig } from "tsup";\n\nexport default defineConfig({\n  entry: ["src/index.ts"],\n  format: ["esm"],\n  dts: true,\n  clean: true,\n});\n' > tsup.config.ts
 
 # Build the application
 RUN pnpm build
